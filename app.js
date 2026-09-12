@@ -85,14 +85,15 @@ const views={
 dashboard(){
   const total=db.people.length;
   const statusCounts={};db.people.forEach(p=>{const st=unifiedOwnerStatus(p);statusCounts[st]=(statusCounts[st]||0)+1});
+  const sumSt=(...ks)=>ks.reduce((a,k)=>a+(statusCounts[k]||0),0);
   const pending=statusCounts['待邀约']||0;
-  const contacted=statusCounts['已联系']||0;
+  const contacted=sumSt('已联系','已答应','已拍摄','剪辑中','待发布','已发布','已完成');
   const agreed=statusCounts['已答应']||0;
   const invited=db.interviews.length;
-  const completed=db.interviews.filter(x=>['已完成','已发布'].includes(x.stage)).length;
-  const shot=db.interviews.filter(x=>['已拍摄','剪辑制作','待审核','待发布','发布中','已完成'].includes(x.stage)).length;
-  const editing=db.interviews.filter(x=>['剪辑制作','待审核'].includes(x.stage)).length;
-  const publishing=db.interviews.filter(x=>['待发布','发布中'].includes(x.stage)).length;
+  const completed=sumSt('已发布','已完成');
+  const shot=sumSt('已答应','已拍摄','剪辑中');
+  const editing=sumSt('剪辑中');
+  const publishing=sumSt('待发布');
   const published=db.interviews.filter(i=>pubsFor(i.id).some(p=>p.url||p.status==='已发布')).length;
   const revenue=db.deals.reduce((a,b)=>a+(+b.amount||0),0);
   const openLeads=db.leads.filter(x=>!['已成交','已关闭'].includes(x.status)).length;
@@ -103,7 +104,7 @@ dashboard(){
   const sourceMap={};db.leads.forEach(l=>{const n=guestNameByInterview(l.interviewId);sourceMap[n]=(sourceMap[n]||0)+1});
   const sources=Object.entries(sourceMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
   const stagesData=[
-    ['待邀约',pending,'#5b8def'],['已联系',contacted,'#8b5cf6'],['已答应',agreed,'#7c6ee6'],
+    ['待邀约',pending,'#5b8def'],['已联系',statusCounts['已联系']||0,'#8b5cf6'],['已答应',agreed,'#7c6ee6'],
     ['已拍摄',statusCounts['已拍摄']||0,'#f59648'],['剪辑中',statusCounts['剪辑中']||0,'#ec7d3b'],
     ['待发布',statusCounts['待发布']||0,'#36a66c'],['已发布',statusCounts['已发布']||0,'#2c9f84'],['已完成',statusCounts['已完成']||0,'#aab5bd'],
     ['暂不推进',statusCounts['暂不推进']||0,'#c5ccd3']
