@@ -635,10 +635,20 @@ body{background:linear-gradient(135deg,#f7fbff 0%,#f7f8fc 45%,#f4faf8 100%)}
   .card-table td:first-child{min-width:0}
   .card-table .name{font-size:13px}
   .card-table td{white-space:normal;word-break:break-word}
-  /* —— 采访工作台：精简列（隐藏脚本完成度/拍摄准备/拍摄日期）—— */
-  .script-table th:nth-child(4),.script-table td:nth-child(4),
-  .script-table th:nth-child(5),.script-table td:nth-child(5),
-  .script-table th:nth-child(7),.script-table td:nth-child(7){display:none}
+  /* —— 采访工作台：手机端卡片式布局 —— */
+  .script-table thead{display:none}
+  .script-table,.script-table tbody,.script-table tr,.script-table td{display:block;width:100%}
+  .script-table tr{padding:12px 12px 8px;margin-bottom:12px;border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:0 2px 8px rgba(25,40,48,.05)}
+  .script-table td{border:0;padding:6px 0;white-space:normal;word-break:break-word}
+  .script-table td:nth-child(4),.script-table td:nth-child(5),.script-table td:nth-child(7){display:none}
+  .script-table td:nth-child(1) b{font-size:14px;color:var(--ink)}
+  .script-table td:nth-child(1) small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+  .script-table td:nth-child(2)::before,.script-table td:nth-child(3)::before,.script-table td:nth-child(6)::before{display:block;font-size:10px;font-weight:700;color:var(--green);margin-bottom:2px;letter-spacing:.03em}
+  .script-table td:nth-child(2)::before{content:"节目标题"}
+  .script-table td:nth-child(3)::before{content:"痛点与钩子"}
+  .script-table td:nth-child(6)::before{content:"状态"}
+  .script-table td:nth-child(6) select{width:100%;padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:#fafbfb}
+  .script-table td:nth-child(8){display:flex;gap:8px;margin-top:6px;padding-top:8px;border-top:1px dashed var(--line)}
   /* —— 通用表格：允许换行 —— */
   .table td{white-space:normal}
   /* —— 总览 KPI：2 列保持、数字加大 —— */
