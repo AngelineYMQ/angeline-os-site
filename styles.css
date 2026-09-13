@@ -583,6 +583,14 @@ body{background:linear-gradient(135deg,#f7fbff 0%,#f7f8fc 45%,#f4faf8 100%)}
 .publish-platform.platform-bilibili:before{background:#17a8c7}
 .publish-platform.platform-weibo:before{background:#ee7a18}
 .publish-card-actions{padding:10px 20px 16px}
+.publish-toolbar{margin-left:auto;display:flex;gap:8px}
+.publish-card-head{cursor:pointer;user-select:none}
+.publish-card-head .pub-chevron{font-size:12px;color:#5f8c7c;transition:transform .18s ease;width:16px;flex:none;margin-top:2px}
+.publish-card-head:hover{background:#f7faf9}
+.publish-card-head.open .pub-chevron{transform:rotate(180deg)}
+.publish-collapse{display:none}
+.publish-collapse.open{display:block}
+.publish-collapse{overflow:hidden}
 @media(max-width:900px){
   .publish-summary{gap:14px;margin-left:0}
   .publish-total b{font-size:17px}
