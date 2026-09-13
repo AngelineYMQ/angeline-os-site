@@ -600,3 +600,86 @@ body{background:linear-gradient(135deg,#f7fbff 0%,#f7f8fc 45%,#f4faf8 100%)}
 @media(max-width:520px){
   .publish-list{grid-template-columns:1fr}
 }
+
+/* ================= 手机端强化（≤700px）================= */
+@media(max-width:700px){
+  /* —— 底部固定导航栏（App 风格）—— */
+  .shell{display:block}
+  .side{position:fixed;left:0;right:0;bottom:0;top:auto;height:auto;min-height:56px;z-index:80;flex-direction:row;align-items:stretch;justify-content:space-between;padding:4px 2px calc(4px + env(safe-area-inset-bottom));background:#173f38;box-shadow:0 -4px 16px rgba(0,0,0,.18)}
+  .brand{display:none}
+  .sidefoot{display:none}
+  .nav{display:flex;width:100%;gap:1px;overflow-x:auto;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav button{flex:1 0 52px;min-width:0;max-width:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 2px;font-size:9px;line-height:1.15;text-align:center;border-radius:8px;white-space:normal;overflow:hidden}
+  .nav button i{font-style:normal;display:flex;align-items:center;justify-content:center}
+  .nav button i svg{width:20px;height:20px}
+  .nav button span{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+  .nav button.active{background:rgba(255,255,255,.16);color:#fff}
+  .main{padding-bottom:64px}
+  /* —— 顶部栏：搜索框恢复显示 —— */
+  .top{height:auto;flex-wrap:wrap;gap:8px;padding:10px 12px;position:sticky;top:0;z-index:70}
+  .top h1{font-size:16px}
+  .top p{display:none}
+  .top .spacer{display:none}
+  .search{display:block;order:3;width:100%;min-width:0;font-size:13px}
+  .top .btn{order:4;margin-left:auto}
+  /* —— 云同步角标移到右上角（避开底部导航）—— */
+  #cloudBadge{left:auto!important;right:12px!important;bottom:auto!important;top:12px!important;z-index:90}
+  /* —— 内容区留白 —— */
+  .content{padding:12px 10px 24px}
+  .hero{margin-bottom:12px}
+  .hero h2{font-size:19px}
+  .hero p{font-size:12px}
+  /* —— 老板名单：精简列（隐藏行业列）—— */
+  .card-table th:nth-child(3),.card-table td:nth-child(3){display:none}
+  .card-table td:first-child{min-width:0}
+  .card-table .name{font-size:13px}
+  .card-table td{white-space:normal;word-break:break-word}
+  /* —— 采访工作台：精简列（隐藏脚本完成度/拍摄准备/拍摄日期）—— */
+  .script-table th:nth-child(4),.script-table td:nth-child(4),
+  .script-table th:nth-child(5),.script-table td:nth-child(5),
+  .script-table th:nth-child(7),.script-table td:nth-child(7){display:none}
+  /* —— 通用表格：允许换行 —— */
+  .table td{white-space:normal}
+  /* —— 总览 KPI：2 列保持、数字加大 —— */
+  .kpi-grid-v26{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px}
+  .dash-kpi{min-height:96px!important;height:96px!important;padding:10px 12px!important}
+  .kpi-copy b{font-size:24px!important}
+  /* —— 漏斗/环形/面板 —— */
+  .dashboard-grid{grid-template-columns:1fr!important}
+  .donut-row{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px}
+  .bottom-summary-v26{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px}
+  .funnel-v26,.engagement-v26,.sources-v26,.latest-v26{grid-column:auto!important}
+  /* —— 弹窗：手机全屏化 —— */
+  .modalback{padding:0;place-items:stretch}
+  .modal{width:100vw;max-width:100vw;max-height:100vh;border-radius:0}
+  .modalhead{padding:13px 14px}
+  .modalbody{padding:14px}
+  .formgrid{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+  .checksummary{grid-template-columns:repeat(2,1fr)}
+  .checkgrid{grid-template-columns:1fr}
+  /* —— 发布矩阵卡片 —— */
+  .publish-card-head{padding:11px 12px}
+  .publish-collapse-body{padding:10px}
+  .platform-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}
+  /* —— 筛选栏横滑 —— */
+  .filters{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}
+  .filters select{flex:0 0 auto}
+  /* —— 工作区/情报/策划等 —— */
+  .intel-workspace{grid-template-columns:1fr}
+  .intel-stepnav{grid-template-columns:repeat(3,1fr);overflow-x:auto}
+  .intel-summary{grid-template-columns:repeat(2,1fr)}
+  .intel-project-summary{grid-template-columns:1fr}
+  .strategy-rule{min-width:0;width:100%}
+  .pipeline{grid-auto-flow:column;grid-auto-columns:minmax(160px,78vw)}
+  .checksummary div{padding:8px}
+  .scriptmode-top b{font-size:18px}
+  .scriptmode{padding:12px 14px 64px}
+}
+@media(max-width:420px){
+  .nav button{flex-basis:44px;font-size:8px}
+  .nav button i svg{width:18px;height:18px}
+  .kpi-grid-v26{grid-template-columns:1fr 1fr!important}
+  .donut-row{grid-template-columns:1fr 1fr!important}
+}
