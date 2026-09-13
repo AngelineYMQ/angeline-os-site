@@ -2,6 +2,7 @@ const KEY='sg_business_interview_v22';
 const OLD_KEYS=['sg_business_interview_v21','sg_business_interview_v20','sg_business_interview_v19','sg_business_interview_v18'];
 const clone=x=>JSON.parse(JSON.stringify(x));
 let stored=localStorage.getItem(KEY);if(!stored){for(const k of OLD_KEYS){if(localStorage.getItem(k)){stored=localStorage.getItem(k);break}}}
+const hadLocal=!!stored;
 let db=stored?JSON.parse(stored):clone(window.SEED);
 db.people=db.people||[];db.interviews=db.interviews||[];db.publishes=db.publishes||[];db.leads=db.leads||[];db.deals=db.deals||[];db.guestIntel=db.guestIntel||[];db.contentStrategies=db.contentStrategies||[];db.directorPlans=db.directorPlans||[];db.productionPlans=db.productionPlans||[];db.contentFactoryPlans=db.contentFactoryPlans||[];db.automationPlans=db.automationPlans||[];db.relationshipProfiles=db.relationshipProfiles||[];db.businessIntelligence=db.businessIntelligence||null;
 // 当前导入名单属于 BNI 顶丰；只迁移旧标签，不限制以后新增其他分会或非 BNI 老板。
@@ -32,7 +33,11 @@ function svgIcon(name){
 
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const id=()=>Date.now()+Math.floor(Math.random()*1000);const META_KEY='sg_business_interview_meta';let meta={};try{meta=JSON.parse(localStorage.getItem(META_KEY)||'{}')}catch(e){meta={}}const daysAgo=ts=>{if(!ts)return null;return Math.floor((Date.now()-ts)/86400000)};function maybeWarnBackup(){const d=daysAgo(meta.lastBackup);if(d!==null&&d>=7&&!meta.warned7){meta.warned7=Date.now();localStorage.setItem(META_KEY,JSON.stringify(meta));setTimeout(()=>toast('已 '+d+' 天未导出备份，请到「设置」页备份数据'),1500)}}const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));meta.lastSave=Date.now();localStorage.setItem(META_KEY,JSON.stringify(meta))};
+const id=()=>Date.now()+Math.floor(Math.random()*1000);const META_KEY='sg_business_interview_meta';let meta={};try{meta=JSON.parse(localStorage.getItem(META_KEY)||'{}')}catch(e){meta={}}const daysAgo=ts=>{if(!ts)return null;return Math.floor((Date.now()-ts)/86400000)};function maybeWarnBackup(){const d=daysAgo(meta.lastBackup);if(d!==null&&d>=7&&!meta.warned7){meta.warned7=Date.now();localStorage.setItem(META_KEY,JSON.stringify(meta));setTimeout(()=>toast('已 '+d+' 天未导出备份，请到「设置」页备份数据'),1500)}}let cloudOnline=null,cloudLastSync=0,_syncTimer=null;
+async function pushCloud(){try{const r=await fetch('/api/state',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(db)});const j=await r.json();if(j&&j.ok){cloudOnline=true;cloudLastSync=j.updated_at||Date.now();meta.lastSave=Math.max(meta.lastSave||0,cloudLastSync);localStorage.setItem(META_KEY,JSON.stringify(meta))}else cloudOnline=false}catch(e){cloudOnline=false}}
+function scheduleCloud(){clearTimeout(_syncTimer);_syncTimer=setTimeout(pushCloud,700)}
+const save=()=>{localStorage.setItem(KEY,JSON.stringify(db));meta.lastSave=Date.now();localStorage.setItem(META_KEY,JSON.stringify(meta));scheduleCloud()};
+async function initCloudSync(){try{const r=await fetch('/api/state',{cache:'no-store'});const j=await r.json();if(!j||!j.ok)return;cloudOnline=true;cloudLastSync=j.updated_at||0;if(j.data&&(!hadLocal||j.updated_at>(meta.lastSave||0))){db=j.data;db.people=db.people||[];db.interviews=db.interviews||[];db.publishes=db.publishes||[];db.leads=db.leads||[];db.deals=db.deals||[];db.guestIntel=db.guestIntel||[];db.contentStrategies=db.contentStrategies||[];db.directorPlans=db.directorPlans||[];db.productionPlans=db.productionPlans||[];db.contentFactoryPlans=db.contentFactoryPlans||[];db.automationPlans=db.automationPlans||[];db.relationshipProfiles=db.relationshipProfiles||[];db.businessIntelligence=db.businessIntelligence||null;db.people.forEach(p=>{if(!p.role||p.role==='BNI会员')p.role='BNI顶丰会员';if(!p.chapter||p.chapter==='BNI')p.chapter='BNI顶丰分会'});meta.lastSave=j.updated_at;localStorage.setItem(KEY,JSON.stringify(db));localStorage.setItem(META_KEY,JSON.stringify(meta));render()}else if(hadLocal){pushCloud()}}catch(e){}}
 const person=i=>db.people.find(x=>x.id==i),interview=i=>db.interviews.find(x=>x.id==i),pubsFor=i=>db.publishes.filter(x=>x.interviewId==i),leadsFor=i=>db.leads.filter(x=>x.interviewId==i);
 const stages=['待邀约','已联系','已答应','已拍摄','剪辑中','待发布','已发布','已完成','暂不推进'];
 const ownerStatuses=stages;
@@ -536,4 +541,14 @@ function openInterview(i){let x=ensureScriptShape(interview(i)),p=person(x.perso
 
 window.addEventListener('hashchange',()=>{page=location.hash.slice(1)||'dashboard';render()});
 window.addEventListener('storage',e=>{if(e.key===KEY&&e.newValue){try{const n=JSON.parse(e.newValue);if(n&&n.people){db=n;render()}}catch(_){}}});
-save();render();
+render();initCloudSync();
+// 云端同步状态角标：左上角显示 ● 云已连接 / ○ 本地模式
+(function(){
+  const badge=document.createElement('div');
+  badge.id='cloudBadge';
+  badge.style.cssText='position:fixed;left:12px;bottom:12px;z-index:99;font-size:11px;padding:4px 10px;border-radius:999px;background:#173f38;color:#fff;opacity:.85;box-shadow:0 2px 8px rgba(0,0,0,.15)';
+  document.body.appendChild(badge);
+  function paint(){const on=cloudOnline===true;badge.textContent=on?'● 云同步已连接':'○ 本地模式';badge.style.background=on?'#1d6f5d':'#8a6d3b';badge.style.opacity=on?.85:.7}
+  paint();
+  const t=setInterval(()=>{if(cloudOnline!==null){paint();clearInterval(t)}},2500);
+})();
