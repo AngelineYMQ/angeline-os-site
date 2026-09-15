@@ -687,6 +687,28 @@ body{background:linear-gradient(135deg,#f7fbff 0%,#f7f8fc 45%,#f4faf8 100%)}
   .scriptmode-top b{font-size:18px}
   .scriptmode{padding:12px 14px 64px}
 }
+
+/* —— 优化：表格滚动条更明显 —— */
+.tablewrap::-webkit-scrollbar{height:10px;width:10px}
+.tablewrap::-webkit-scrollbar-track{background:#f1f4f6;border-radius:8px}
+.tablewrap::-webkit-scrollbar-thumb{background:#c5d1d6;border-radius:8px}
+.tablewrap::-webkit-scrollbar-thumb:hover{background:#9fb3ba}
+
+/* —— 优化：侧边栏 Logo 更精致 —— */
+.brandmark{transition:transform .2s ease, box-shadow .2s ease}
+.brandmark:hover{transform:scale(1.08);box-shadow:0 0 0 4px rgba(255,255,255,.15)}
+.brandmark:after{transition:all .2s ease}
+.brandmark:hover:after{width:14px;height:14px}
+
+/* —— 优化：表格内边距微调，更紧凑 —— */
+.table.card-table th, .table.card-table td{padding:9px 12px}
+.table.card-table .industry-tag{font-size:11px;padding:2px 8px}
+
+/* —— 优化：内联选择框宽度自适应 —— */
+.inline-select{min-width:110px}
+
+/* —— 优化：空状态提示更友好 —— */
+.empty{padding:48px 20px;font-size:14px}
 @media(max-width:420px){
   .nav button{flex-basis:44px;font-size:8px}
   .nav button i svg{width:18px;height:18px}
