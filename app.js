@@ -102,7 +102,11 @@ dashboard(){
   const published=db.interviews.filter(i=>pubsFor(i.id).some(p=>p.url||p.status==='已发布')).length;
   const revenue=db.deals.reduce((a,b)=>a+(+b.amount||0),0);
   const openLeads=db.leads.filter(x=>!['已成交','已关闭'].includes(x.status)).length;
-  const scheduled=db.interviews.filter(x=>x.shootDate && !['已发布','已完成','暂不推进'].includes(x.stage)).sort((a,b)=>a.shootDate.localeCompare(b.shootDate)).slice(0,4);
+  const today=new Date().toISOString().split('T')[0];
+  const scheduled=db.interviews.filter(x=>x.shootDate && x.shootDate>=today && !['已发布','已完成','暂不推进'].includes(x.stage)).sort((a,b)=>{
+    if(a.shootDate!==b.shootDate) return a.shootDate.localeCompare(b.shootDate);
+    return (a.shootTime||'99').localeCompare(b.shootTime||'99');
+  }).slice(0,4);
   const recent=[...db.interviews].sort((a,b)=>(b.id||0)-(a.id||0)).slice(0,5);
   const eng={likes:0,comments:0,shares:0,saves:0};
   db.publishes.forEach(a=>{eng.likes+=+a.likes||0;eng.comments+=+a.comments||0;eng.shares+=+a.shares||0;eng.saves+=+a.saves||0});
