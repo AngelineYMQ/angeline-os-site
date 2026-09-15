@@ -715,3 +715,5 @@ body{background:linear-gradient(135deg,#f7fbff 0%,#f7f8fc 45%,#f4faf8 100%)}
   .kpi-grid-v26{grid-template-columns:1fr 1fr!important}
   .donut-row{grid-template-columns:1fr 1fr!important}
 }
+.site-link{color:inherit;text-decoration:underline;text-underline-offset:2px;text-decoration-color:rgba(11,122,86,.5)}
+.site-link:hover{color:#0b7a56}
